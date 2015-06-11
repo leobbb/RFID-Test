@@ -38,14 +38,38 @@ int _tmain(int argc, _TCHAR* argv[])
 	cout << "My Timer Class	----" << endl;
 	MyTimer timer;
 	cout << "timer.GetFrequency():  "<< timer.GetFrequency() << endl;
-	unsigned _int64 begin= timer.Start();
-	printf("time.start(): %I64u \n", begin);
-	Sleep(1000);
-	unsigned _int64 end = timer.Stop();
-	cout << "timer.stop(): " <<  end << endl;
+	timer.Start();
+	//printf("time.start(): %I64u \n", timer.GetBegin());
+	//Sleep(1000);
+	timer.Stop();
+	printf("time.start(): %I64u \n", timer.GetBegin());
+	cout << "timer.stop(): " <<  timer.GetEnd() << endl;
 
-	cout << "timer.time(): " << timer.GetTime() << endl;
+	cout << "timer.time(): " << timer.GetTime() << endl <<endl;
 
+	// 随机数 test 
+	random_device rd;	// 生成随机数的速度慢，平均3个时钟周期
+	unsigned int rn1;
+	
+	timer.GetFrequency();
+	timer.Start();
+	rn1 = rd();
+	//cout << "random_device: " << rd() << endl;
+	timer.Stop();
+	cout << "random_device: " << rn1 << endl;
+	cout << "time of random_device: " << timer.GetTime() << endl;
+	
+	minstd_rand0 mr(timer.GetTime());	// 生成随机数的速度快，平均1个时钟周期
+	cout << endl;
+	unsigned int rn2;
+
+	timer.GetFrequency();
+	timer.Start();
+	rn2 = mr();
+	//cout << "minstd_rand0: " << mr() << endl;
+	timer.Stop();
+	cout << "minstd_rand0: " << rn2 << endl;
+	cout << "time of minstd_rand0: " << timer.GetTime() << endl;
 
 	return 0;
 }
