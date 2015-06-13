@@ -84,13 +84,16 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="MyTimer.h" />
+    <ClInclude Include="test_k.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="RFID.cpp" />
+    <ClCompile Include="rfid.cpp" />
+    <ClCompile Include="RFID_old.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="test_k.cpp" />
     <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <ItemGroup>

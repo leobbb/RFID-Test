@@ -24,10 +24,13 @@
     <ClInclude Include="targetver.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="rfid.h">
+    <ClInclude Include="MyTimer.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="MyTimer.h">
+    <ClInclude Include="test_k.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="rfid.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -38,7 +41,13 @@
     <ClCompile Include="Timer.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="RFID.cpp">
+    <ClCompile Include="test_k.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="RFID_old.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="rfid.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
