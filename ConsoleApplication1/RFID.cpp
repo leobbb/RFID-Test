@@ -59,7 +59,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	cout << "random_device: " << rn1 << endl;
 	cout << "time of random_device: " << timer.GetTime() << endl;
 	
-	minstd_rand0 mr(timer.GetTime());	// 生成随机数的速度快，平均1个时钟周期
+	minstd_rand0 mr(timer.GetEnd());	// 生成随机数的速度快，平均1个时钟周期
 	cout << endl;
 	unsigned int rn2;
 
@@ -71,6 +71,24 @@ int _tmain(int argc, _TCHAR* argv[])
 	cout << "minstd_rand0: " << rn2 << endl;
 	cout << "time of minstd_rand0: " << timer.GetTime() << endl;
 
+	// hash函数测试 
+	cout << "hash 函数测试 " << endl;
+	hash<string> str_hash;
+	size_t h;
+	
+	timer.Start();
+	h = str_hash("test");
+	timer.Stop();
+
+	cout << "hash('test'): " << h << endl;
+	cout << "time of hash: " << timer.GetTime() << endl << endl;
+
+	timer.GetFrequency();
+	timer.Start();
+	Sleep(1);
+	timer.Stop();
+	cout << "time of Sleep(1000): " << timer.GetTime() << endl;
+	
 	return 0;
 }
 
