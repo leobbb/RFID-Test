@@ -8,8 +8,12 @@ int _tmain(int argc, _TCHAR* argv[])
 {
 	cout << endl << "\t Hello! Task Start... " << endl;
 
-	minstd_rand0 mr(time(NULL));	// 生成随机数
-	unint r1 = mr();
+	MyTimer timer;
+
+	timer.Start();
+
+	random_device rd;	// 生成随机数
+	unint r1 = rd();
 
 	hash<string> str_hash;
 	unint qua = str_hash("QuasiID of Tag");
@@ -23,7 +27,19 @@ int _tmain(int argc, _TCHAR* argv[])
 	ri.r1 = r1;
 
 	// 调用模拟标签的函数
+	cout << endl << "TagFun()..." << endl;
 	Response_Info res = TagFun(ri);
+
+	// 调用阅读器的函数
+	cout << endl << "ReaderFun()..." << endl;
+	Result_Info result = ReaderFun(res, r1);
+
+	timer.Stop();			// 计时器终止
+
+	cout << endl << "Result: " << endl;
+	if (result == '1')
+		cout << "Success" << endl;
+	else cout << "Failure" << endl;
 
 	return 0;
 }

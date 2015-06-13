@@ -1,3 +1,5 @@
+// k匿名隐私模型
+
 #include "stdafx.h"
 using namespace std;
 
@@ -43,8 +45,20 @@ std::ostream& operator<<(ostream & out, Response_Info value){		// 输出 响应信息
 }
 
 // 模拟阅读器行为的函数
-Result_Info ReaderFun(Response_Info, string r1){ 
+Result_Info ReaderFun(Response_Info res, unint r1){ 
+	// 读取响应信息
+	unint qua, r2, h;
+	qua = res.QuasiId;
+	r2 = res.r2;
+	h = res.h;
 
+	// 访问数据库
+	unint key2 = 12345;		// 数据库中存储的标签的key
+	hash<unint> int_hash;
+	unint h1 = int_hash(r1&r2&key2);
+
+	if (h1 == h)
+		return '1';
 
 	return '0';
 }
