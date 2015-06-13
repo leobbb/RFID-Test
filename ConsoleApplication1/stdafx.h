@@ -16,7 +16,8 @@
 #include <iostream>
 #include "rfid.h"
 #include <string>
+#include <sstream>
 #include <ctime>
-#include "MyTimer.h"
-#include <random>
-#include <functional>
+#include "MyTimer.h"			// 计时器
+#include <random>				// 随机数生成
+#include <functional>			// 用到hash函数
