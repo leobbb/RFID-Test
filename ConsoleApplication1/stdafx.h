@@ -23,3 +23,5 @@
 #include <functional>			// ÓÃµ½hashº¯Êý
 #include "rfid.h"
 #include "test_k.h" 
+#include "ADOConn.h"
+

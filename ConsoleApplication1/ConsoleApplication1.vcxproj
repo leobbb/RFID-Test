@@ -80,6 +80,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ADOConn.h" />
     <ClInclude Include="rfid.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -87,6 +88,7 @@
     <ClInclude Include="test_k.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ADOConn.cpp" />
     <ClCompile Include="rfid.cpp" />
     <ClCompile Include="RFID_old.cpp" />
     <ClCompile Include="stdafx.cpp">

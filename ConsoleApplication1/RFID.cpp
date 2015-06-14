@@ -2,6 +2,7 @@
 //
 
 #include "stdafx.h"
+
 using namespace std;
 
 int _tmain(int argc, _TCHAR* argv[])
@@ -11,7 +12,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	MyTimer timer;
 
 	timer.Start();
-
+	
 	random_device rd;	// 生成随机数
 	unint r1 = rd();
 
@@ -35,12 +36,39 @@ int _tmain(int argc, _TCHAR* argv[])
 	Result_Info result = ReaderFun(res, r1);
 
 	timer.Stop();			// 计时器终止
-
+	cout << "Time of process: " << timer.GetTime() << endl;
+	
 	cout << endl << "Result: " << endl;
 	if (result == '1')
 		cout << "Success" << endl;
 	else cout << "Failure" << endl;
+	
+	ADOConn dbConn;
+	dbConn.OnInitADOConn();
+	if (dbConn.m_pConnection != NULL)
+		cout << endl << "DB connection success." << endl;
+	else
+		cout << endl << "DB connection failure." << endl;
 
+	dbConn.ExitConnect();
+
+	//::CoInitialize(NULL);		// 初始化OLE/COM	库环境
+	//_ConnectionPtr pMyConn = NULL;
+	//HRESULT hr = pMyConn.CreateInstance("ADODB.Connection");
+
+	//_bstr_t strConn = "Provider=SQLOLEDB.1;Integrated Security=SSPI;Persist Security Info=False;User ID=sa;Initial Catalog=rfid;Data Source=np:\\\\.\\pipe\\LOCALDB#SH9F91AA\\tsql\\query;";
+	//try{
+	//	cout << "in try---" << endl;
+	//	pMyConn->Open(strConn, "", "", adModeUnknown);
+	//	cout << endl << "open success." << endl;
+	//}
+	//catch (_com_error &e){
+	//	printf("\tcode = %010lx\n", e.Error());
+	//	printf("\tcode meaning = %s \n", e.ErrorMessage());
+	//	cout << "exception " << endl;
+	//}
+
+	//cout << "end" << endl;
 	return 0;
 }
 
@@ -53,4 +81,17 @@ string itostr(size_t i){		// 将整形数转换为字符串
 unint strtoi(string s){		// 将字符串转换为整形数
 	int i = atoi(s.c_str());
 	return i;
+}
+
+void printerror(_com_error e){	// 输出异常信息
+	//显示错误信息
+	_bstr_t bstrSource(e.Source());
+	_bstr_t bstrDescription(e.Description());
+
+	printf("Error\n");
+	printf("\tCode = %08lx\n", e.Error());
+	printf("\tCode meaning = %s\n", e.ErrorMessage());
+	printf("\tSource = %s\n", (LPCSTR)bstrSource);
+	printf("\tDescription = %s\n", (LPCSTR)bstrDescription);
+
 }
