@@ -9,51 +9,8 @@ int _tmain(int argc, _TCHAR* argv[])
 {
 	cout << endl << "\t Hello! Task Start... " << endl;
 
-	MyTimer timer;
-
-	timer.Start();
-	
-	random_device rd;	// 生成随机数
-	unint r1 = rd();
-
-	hash<string> str_hash;
-	unint qua = str_hash("QuasiID of Tag");
-
-	hash<unint> int_hash;
-	unint key = int_hash(qua&r1);
-
-	Request_Info ri;		// 生成查询信息
-	ri.QuasiId = qua;
-	ri.key = key;
-	ri.r1 = r1;
-
-	// 调用模拟标签的函数
-	cout << endl << "TagFun()..." << endl;
-	Response_Info res = TagFun(ri);
-
-	// 调用阅读器的函数
-	cout << endl << "ReaderFun()..." << endl;
-	Result_Info result = ReaderFun(res, r1);
-
-	timer.Stop();			// 计时器终止
-	cout << "Time of process: " << timer.GetTime() << endl;
-	
-	cout << endl << "Result: " << endl;
-	if (result == '1')
-		cout << "Success" << endl;
-	else cout << "Failure" << endl;
-	
-	ADOConn dbConn;
-	dbConn.OnInitADOConn();
-	if (dbConn.m_pConnection != NULL && dbConn.m_pConnection->State == adStateOpen)
-		cout << endl << "DB connection success." << endl;
-	else
-		cout << endl << "DB connection failure." << endl;
-	
-	_bstr_t sqlInsert = "insert into Tags values (1221,1212)";
-	dbConn.ExecuteSQL(sqlInsert);
-
-	dbConn.ExitConnect();
+	TestK test_k;
+	test_k.DataInsert();
 
 	//::CoInitialize(NULL);		// 初始化OLE/COM	库环境
 	//_ConnectionPtr pMyConn = NULL;
@@ -75,17 +32,20 @@ int _tmain(int argc, _TCHAR* argv[])
 	return 0;
 }
 
-string itostr(size_t i){		// 将整形数转换为字符串
+// 将整形数转换为字符串
+string itostr(size_t i){		
 	char buf[20];
 	sprintf_s(buf, "%010.10u", i);
 	return buf;
 }
 
-unint strtoi(string s){		// 将字符串转换为整形数
+// 将字符串转换为整形数
+unint strtoi(string s){		
 	int i = atoi(s.c_str());
 	return i;
 }
 
+// 输出异常信息
 void printerror(_com_error e){	// 输出异常信息
 	//显示错误信息
 	_bstr_t bstrSource(e.Source());
