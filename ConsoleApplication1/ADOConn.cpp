@@ -21,10 +21,6 @@ ADOConn::ADOConn()
 	m_pRecordset = NULL;
 }
 
-ADOConn::~ADOConn()
-{
-
-}
 
 void ADOConn::OnInitADOConn()
 {
@@ -36,7 +32,8 @@ void ADOConn::OnInitADOConn()
        m_pConnection.CreateInstance("ADODB.Connection");
 
 	   //设置连接字符串
-	   _bstr_t strConnect = "Provider=SQLOLEDB.1;Integrated Security=SSPI;Persist Security Info=False;User ID=sa;Initial Catalog=rfid;Data Source=np:\\\\.\\pipe\\LOCALDB#SH9F91AA\\tsql\\query;";
+	   _bstr_t strConnect = "Provider=SQLOLEDB.1;Data Source=np:\\\\.\\pipe\\LOCALDB#6929D9B9\\tsql\\query;Integrated Security=SSPI;Persist Security Info=False;User ID=sa;Initial Catalog=rfid;";
+	   //_bstr_t strConnect = "Data Source=np:\\\\.\\pipe\\LOCALDB#67869666\\tsql\\query;Initial Catalog=rfid;Integrated Security=SSPI;Connect Timeout=15;Encrypt=False;TrustServerCertificate=False";
 
 	   //SERVER和UID,PWD的设置根据实际情况来设置
 	   m_pConnection->Open(strConnect,"","",adModeUnknown);
@@ -45,6 +42,7 @@ void ADOConn::OnInitADOConn()
 	//捕捉异常
 	catch(_com_error e)
 	{
+		m_pConnection = NULL;
 		//显示错误信息
 		printerror(e);
 	}
@@ -67,9 +65,14 @@ _RecordsetPtr& ADOConn::GetRecordSet(_bstr_t bstrSQL)
 		printerror(e);
 	}
 	//返回记录集
-
-
+	
 	return m_pRecordset;
+}
+
+// 关闭记录集
+void ADOConn::CloseRecordset(){
+	if (m_pRecordset != NULL && m_pRecordset->GetState() == adStateOpen)
+		m_pRecordset->Close();
 }
 
 BOOL ADOConn::ExecuteSQL(_bstr_t bstrSQL)
@@ -100,9 +103,9 @@ void ADOConn::ExitConnect()
 {
 	try{
 		//关闭记录集和连接
-		if (m_pRecordset != NULL)
+		if (m_pRecordset != NULL && m_pRecordset->GetState() == adStateOpen)
 			m_pRecordset->Close();
-		if (m_pConnection != NULL)
+		if (m_pConnection != NULL && m_pConnection->GetState() == adStateOpen)
 			m_pConnection->Close();
 		//释放环境
 		::CoUninitialize();

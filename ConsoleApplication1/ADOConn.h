@@ -17,12 +17,13 @@ public:
 
 public:
 	ADOConn();
-	virtual ~ADOConn();
 
 	//初始化--连接数据库
     void OnInitADOConn();
 	//执行查询
     _RecordsetPtr & GetRecordSet(_bstr_t bstrSQL);
+	// 关闭记录集
+	void ADOConn::CloseRecordset();
 	//执行SQL语句
     BOOL ExecuteSQL(_bstr_t bstrSQL);
 	//断开数据库连接

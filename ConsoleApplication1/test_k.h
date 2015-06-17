@@ -1,4 +1,4 @@
-// k匿名隐私模型
+// 测试k匿名隐私模型
 
 #ifndef _test_k_h_
 #define _test_k_h_

@@ -45,10 +45,13 @@ int _tmain(int argc, _TCHAR* argv[])
 	
 	ADOConn dbConn;
 	dbConn.OnInitADOConn();
-	if (dbConn.m_pConnection != NULL)
+	if (dbConn.m_pConnection != NULL && dbConn.m_pConnection->State == adStateOpen)
 		cout << endl << "DB connection success." << endl;
 	else
 		cout << endl << "DB connection failure." << endl;
+	
+	_bstr_t sqlInsert = "insert into Tags values (1221,1212)";
+	dbConn.ExecuteSQL(sqlInsert);
 
 	dbConn.ExitConnect();
 
