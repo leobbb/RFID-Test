@@ -17,6 +17,7 @@ public:
 
 public:
 	ADOConn();
+	~ADOConn();
 
 	//初始化--连接数据库
     void OnInitADOConn();

@@ -2,6 +2,8 @@
 
 MyTimer::MyTimer(){
 	QueryPerformanceFrequency(&tf);
+	QueryPerformanceCounter(&t1);
+	QueryPerformanceCounter(&t2);
 }
 
 unsigned _int64 MyTimer::GetFrequency(){

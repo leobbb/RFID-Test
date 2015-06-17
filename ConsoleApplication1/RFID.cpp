@@ -5,13 +5,39 @@
 
 using namespace std;
 
+ADOConn adoConn;				// 定义 全局数据库连接对象
+
 int _tmain(int argc, _TCHAR* argv[])
 {
 	cout << endl << "\t Hello! Task Start... " << endl;
+	try{
+		// 测试数据库连接
+		adoConn.OnInitADOConn();
+		if (adoConn.m_pConnection != NULL && adoConn.m_pConnection->State == adStateOpen)
+			cout << endl << "DB connection success." << endl;
+		else{
+			cout << endl << "DB connection failure." << endl;
+			return -1;
+		}
 
-	TestK test_k;
-	test_k.DataInsert();
+		// 随机选取10个标签作为实验对象
+		int tags[10];
+		for (int i = 0; i < 10; ++i){
+			tags[i] = _Random_device() % 1000 + 1;  // 取1...1000之间的数
+		}
 
+		// 将实验对象逐个传入 ProtocolFun 函数进行实验
+		// 测试 k-匿名模型
+		TestK test_k;
+		// 可能需要先测试数据是否正确、完整
+		//test_k.DataInsert();
+		LONGLONG lltime = test_k.ProtocolFun(tags[0]);
+		cout << endl << "Time of TestK is " << lltime << "." << endl;
+
+	}
+	catch (_com_error){
+
+	}
 	//::CoInitialize(NULL);		// 初始化OLE/COM	库环境
 	//_ConnectionPtr pMyConn = NULL;
 	//HRESULT hr = pMyConn.CreateInstance("ADODB.Connection");
@@ -35,7 +61,7 @@ int _tmain(int argc, _TCHAR* argv[])
 // 将整形数转换为字符串
 string itostr(size_t i){		
 	char buf[20];
-	sprintf_s(buf, "%010.10u", i);
+	sprintf_s(buf, "%u", i);
 	return buf;
 }
 

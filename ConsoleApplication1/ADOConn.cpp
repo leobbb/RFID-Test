@@ -17,22 +17,31 @@ static char THIS_FILE[]=__FILE__;
 
 ADOConn::ADOConn()
 {
+	//初始化OLE/COM库环境
+	::CoInitialize(NULL);
+
 	m_pConnection = NULL;
 	m_pRecordset = NULL;
 }
 
+ADOConn::~ADOConn(){
+	ExitConnect();
+	m_pConnection = NULL;
+	m_pRecordset = NULL;
+	//释放环境
+	::CoUninitialize();
+}
 
 void ADOConn::OnInitADOConn()
 {
-	//初始化OLE/COM库环境
-    ::CoInitialize(NULL);
+
 	try
 	{
 		//创建connection对象
        m_pConnection.CreateInstance("ADODB.Connection");
 
 	   //设置连接字符串
-	   _bstr_t strConnect = "Provider=SQLOLEDB.1;Data Source=np:\\\\.\\pipe\\LOCALDB#9AA2291E\\tsql\\query;Integrated Security=SSPI;Persist Security Info=False;User ID=sa;Initial Catalog=rfid;";
+	   _bstr_t strConnect = "Provider=SQLOLEDB.1;Data Source=np:\\\\.\\pipe\\LOCALDB#218702CE\\tsql\\query;Integrated Security=SSPI;Persist Security Info=False;User ID=sa;Initial Catalog=rfid;";
 
 	   //SERVER和UID,PWD的设置根据实际情况来设置
 	   m_pConnection->Open(strConnect,"","",adModeUnknown);
@@ -51,9 +60,10 @@ _RecordsetPtr& ADOConn::GetRecordSet(_bstr_t bstrSQL)
 {
     try
 	{
-		//连接数据库，如果connection对象为空，则重新连接数据库
-		if(m_pConnection==NULL)
-              OnInitADOConn();
+		//连接数据库，如果connection对象为空或者关闭，则重新连接数据库
+		if (m_pConnection == NULL || m_pConnection->GetState() == adStateClosed)
+			OnInitADOConn();
+
 		//创建记录集对象
 		m_pRecordset.CreateInstance(__uuidof(Recordset)); 
 		//取得表中的记录
@@ -79,9 +89,10 @@ BOOL ADOConn::ExecuteSQL(_bstr_t bstrSQL)
 	_variant_t RecordsAffected;
 	try
 	{
-		//是否已连接数据库
-        if(m_pConnection==NULL)
-	     	OnInitADOConn();
+		//连接数据库，如果connection对象为空或者关闭，则重新连接数据库
+		if (m_pConnection == NULL || m_pConnection->GetState() == adStateClosed)
+			OnInitADOConn();
+
 		//connection对象的Execute方法(_bstr_t CommandText,
         //VARIANT * RecordsAffected,long Options)
 		//其中CommandText是命令字符串,通常是SQL命令
@@ -106,8 +117,6 @@ void ADOConn::ExitConnect()
 			m_pRecordset->Close();
 		if (m_pConnection != NULL && m_pConnection->GetState() == adStateOpen)
 			m_pConnection->Close();
-		//释放环境
-		::CoUninitialize();
 	}
 	catch (_com_error e){
 		printerror(e);

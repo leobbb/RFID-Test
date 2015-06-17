@@ -10,6 +10,7 @@ private:
 public:
 	TestK();
 	TestK(int tmp);
+
 	struct Request_Info		// 查询信息
 	{
 		unsigned int QuasiId;  // 标签准标识符
@@ -27,14 +28,14 @@ public:
 		friend std::ostream& operator<<(std::ostream& out, Response_Info value);
 	};
 
-	typedef unsigned char Result_Info;			// 认证结果
+	typedef bool Result_Info;			// 认证结果
 
 	// 向数据库中插入数据
 	int DataInsert();
 
 	Response_Info TagFun(Request_Info rInfo);				// 模拟标签行为的函数
 	Result_Info ReaderFun(Response_Info res, unint r1);	// 模拟阅读器行为的函数
-	unsigned _int64 ProtocolFun();							// 模拟交互过程的函数
+	unsigned _int64 ProtocolFun(const int& tag);			// 模拟交互过程的函数
 
 };
 #endif
