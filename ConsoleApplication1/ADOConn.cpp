@@ -41,7 +41,7 @@ void ADOConn::OnInitADOConn()
        m_pConnection.CreateInstance("ADODB.Connection");
 
 	   //设置连接字符串
-	   _bstr_t strConnect = "Provider=SQLOLEDB.1;Data Source=np:\\\\.\\pipe\\LOCALDB#218702CE\\tsql\\query;Integrated Security=SSPI;Persist Security Info=False;User ID=sa;Initial Catalog=rfid;";
+	   _bstr_t strConnect = "Provider=SQLOLEDB.1;Data Source=np:\\\\.\\pipe\\LOCALDB#F7CFC8F7\\tsql\\query;Integrated Security=SSPI;Persist Security Info=False;User ID=sa;Initial Catalog=rfid;";
 
 	   //SERVER和UID,PWD的设置根据实际情况来设置
 	   m_pConnection->Open(strConnect,"","",adModeUnknown);

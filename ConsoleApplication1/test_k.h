@@ -34,8 +34,9 @@ public:
 	int DataInsert();
 
 	Response_Info TagFun(Request_Info rInfo);				// 模拟标签行为的函数
-	Result_Info ReaderFun(Response_Info res, unint r1);	// 模拟阅读器行为的函数
+	Result_Info ReaderFun(Response_Info res, unint r1);		// 模拟阅读器行为的函数
 	unsigned _int64 ProtocolFun(const int& tag);			// 模拟交互过程的函数
+	unsigned _int64 Protocol(const int & tag);				// 模拟交互过程的函数 无函数调用
 
 };
 #endif

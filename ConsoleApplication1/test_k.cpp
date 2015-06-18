@@ -79,8 +79,8 @@ std::ostream& operator<<(ostream & out, TestK::Response_Info value){		// 输出 响
 
 // 模拟标签行为的函数
 TestK::Response_Info TestK::TagFun(TestK::Request_Info req){
-	std::cout << std::endl << "Request_Info: " << req << endl;
-	std::cout << endl << "Start TagFun ..." << endl;	
+	//std::cout << std::endl << "Request_Info: " << req << endl;
+	//std::cout << endl << "Start TagFun ..." << endl;	
 	// 读取 Request_Info内的信息
 	unint quaId, key, r1;
 	quaId = req.QuasiId;	
@@ -92,18 +92,18 @@ TestK::Response_Info TestK::TagFun(TestK::Request_Info req){
 	minstd_rand0 minrand(r1&key);		
 	unint r2 = minrand();
 
-	std::cout << "r1: " << r1 << "\tr2: " << r2 << endl;
-	std::cout << "Key: " << key << endl;
+	//std::cout << "r1: " << r1 << "\tr2: " << r2 << endl;
+	//std::cout << "Key: " << key << endl;
 	
 	unint h = int_hash(r1&r2&key);	// 计算Hash值
-	std::cout << "hash(r1,r2,key): " << h << endl;
+	//std::cout << "hash(r1,r2,key): " << h << endl;
 
 	Response_Info res;			// 生成响应信息
 	res.QuasiId = quaId;
 	res.r2 = r2;
 	res.h = h;
-	std::cout << endl << "Response_Info: " << res << endl;
-	std::cout << endl << "TagFun end." << endl;
+	//std::cout << endl << "Response_Info: " << res << endl;
+	//std::cout << endl << "TagFun end." << endl;
 	return  res;
 }
 
@@ -117,12 +117,12 @@ TestK::Result_Info TestK::ReaderFun(Response_Info res, unint r1){
 	unint key, h1;		// 数据库中存储的标签密钥, 新的Hash值
 	hash<unint> int_hash;		// 计算Hash值
 
-	cout << endl << "Start ReaderFun ... QuasiId = " << qua << endl;
+	//cout << endl << "Start ReaderFun ... QuasiId = " << qua << endl;
 	// 访问数据库
 	//ADOConn adoConn;
 	string sql;
-	sql = "select QuasiId, Key from Tags where QuasiId = ";
-	sql += qua;
+	sql = "select [QuasiId],[Key] from Tags where QuasiId = ";
+	sql += itostr(qua);
 	_RecordsetPtr pRecordset = adoConn.GetRecordSet(sql.c_str());
 	
 	if (pRecordset->GetRecordCount() == 0)
@@ -133,20 +133,20 @@ TestK::Result_Info TestK::ReaderFun(Response_Info res, unint r1){
 		h1 = int_hash(r1&r2&key);
 		if (h1 == h)
 		{
-			cout << endl << "Test end." << endl;
+			//cout << endl << "Test end." << endl;
 			return TRUE;
 		}
 		pRecordset->MoveNext();
 	}
 
-	cout << endl << "ReaderFun end." << endl;
+	//cout << endl << "ReaderFun end." << endl;
 	return FALSE;
 }
 
 // 模拟交互过程的函数
 unsigned _int64 TestK::ProtocolFun(const int & tag){
 	string sql;
-	sql = "select QuasiId, Key from Tags where Id=";
+	sql = "select [QuasiId], [Key] from Tags where Id=";
 	sql.append(itostr(tag));
 	adoConn.GetRecordSet(sql.c_str());
 	if (adoConn.m_pRecordset->GetState() == adStateClosed || adoConn.m_pRecordset->GetRecordCount() == 0)
@@ -155,8 +155,8 @@ unsigned _int64 TestK::ProtocolFun(const int & tag){
 		return 0;
 	}
 
-	cout << endl << "Start testing k-anonymous model...." << endl;
-	cout << "\tTag[" << tag << "]" << endl;
+	//cout << endl << "Start testing k-anonymous model...." << endl;
+	//cout << "\tTag[" << tag << "]" << endl;
 	// 生成查询信息
 	Request_Info ri;
 	ri.QuasiId = adoConn.m_pRecordset->GetCollect("QuasiId").uintVal;
@@ -190,11 +190,16 @@ unsigned _int64 TestK::ProtocolFun(const int & tag){
 
 	timer.Stop();			// 计时器终止
 
-	cout << endl << "Result: " << endl;
-	if (result == TRUE)
-		cout << "Success! Tag is authentication." << endl;
-	else cout << "Failure" << endl;
-	cout << endl << "Test end." << endl;
+	//cout << endl << "Result: " << endl;
+	//if (result == TRUE)
+	//	cout << "\tSuccess! Tag is authentication." << endl;
+	//else cout << "\tFailure" << endl;
+	//cout << endl << "Test end." << endl;
 
 	return  timer.GetTime();
+}
+
+// 模拟交互过程的函数 无函数调用
+unsigned _int64 TestK::Protocol(const int & tag){
+
 }
