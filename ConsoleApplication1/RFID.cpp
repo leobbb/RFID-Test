@@ -19,6 +19,9 @@ int _tmain(int argc, _TCHAR* argv[])
 			cout << endl << "DB connection failure." << endl;
 			return -1;
 		}
+		string sql = "select count(*) as num from Tags ";
+		adoConn.GetRecordSet(sql.c_str());
+		cout << endl << "Data count(*) : " << adoConn.m_pRecordset->GetCollect("num").uintVal << endl;
 
 		// 随机选取10个标签作为实验对象
 		int tags[10];
@@ -27,30 +30,28 @@ int _tmain(int argc, _TCHAR* argv[])
 			tags[i] = _Random_device() % 1000 + 1;  // 取1...1000之间的数
 		}
 
-		// 将实验对象逐个传入 ProtocolFun 函数进行实验
-		// 测试 k-匿名模型
-		TestK test_k(3);
-		// 可能需要先测试数据是否正确、完整
-		if (test_k.InitData())
-			cout << endl << "Test Starting..." << endl;
-		else{
-			cout << endl << "Data initial failure." << endl;
-			return -1;
-		}
-		
-		cout << endl << "Result of k-anonymous: " << endl;
-		while (i){
-
-			int tag = tags[--i]; 
-			LONGLONG lltime = 0;
-			for (int j = 0; j < 10; ++j){
-				lltime += test_k.ProtocolFun(tag);
-			}
-			cout << "Tag[" << tag << "]:\t"
-				<< "Time is " << lltime / 10 << " ns." << endl;
-		}
-		
-		cout << endl << "End." << endl;
+	//	// 将实验对象逐个传入 ProtocolFun 函数进行实验
+	//	// 测试 k-匿名模型
+	//	TestK test_k(3);
+	//	// 可能需要先测试数据是否正确、完整
+	//	if (test_k.InitData())
+	//		cout << endl << "Test Starting..." << endl;
+	//	else{
+	//		cout << endl << "Data initial failure." << endl;
+	//		return -1;
+	//	}
+	//	
+	//	cout << endl << "Result of k-anonymous: \n\tk = " << test_k.GetK() << endl;
+	//	while (i){
+	//		int tag = tags[--i]; 
+	//		LONGLONG lltime = 0;
+	//		for (int j = 0; j < 10; ++j){
+	//			lltime += test_k.ProtocolFun(tag);
+	//		}
+	//		cout << "Tag[" << tag << "]:\t"
+	//			<< "Time is " << lltime / 10 << " ns." << endl;
+	//	}
+	//	cout << endl << "End." << endl;
 	}
 	catch (_com_error){
 

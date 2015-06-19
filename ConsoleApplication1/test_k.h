@@ -10,6 +10,9 @@ private:
 public:
 	TestK();
 	TestK(int tmp);
+	
+	// 获得参数k的值
+	int GetK();
 
 	struct Request_Info		// 查询信息
 	{
@@ -32,6 +35,8 @@ public:
 
 	// 初始化数据库中的数据
 	bool InitData();
+	// 测试数据是否正确
+	bool TestData();
 	// 向数据库中插入数据
 	int DataInsert();
 
