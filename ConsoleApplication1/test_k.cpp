@@ -66,6 +66,24 @@ int TestK::DataInsert(){
 
 }
 
+// 初始化数据库中的数据
+bool TestK::InitData(){
+	cout << endl << "Delete All Data..." << endl;
+	string sql = "";
+	sql = "TRUNCATE TABLE [Tags]";
+	if (adoConn.ExecuteSQL(sql.c_str()))
+		cout << "\tOperating is done." << endl;
+	else
+		return FALSE;
+
+	cout << endl << "Insert New Data..." << endl;
+	if (DataInsert() == 1000)
+		cout << "\tOperating is done." << endl;
+	else
+		return FALSE;
+
+	return TRUE;
+}
 
 std::ostream& operator<<(ostream & out, TestK::Request_Info value){		// 输出 查询信息
 	out << value.QuasiId << " " << value.key << " " << value.r1;
@@ -201,5 +219,108 @@ unsigned _int64 TestK::ProtocolFun(const int & tag){
 
 // 模拟交互过程的函数 无函数调用
 unsigned _int64 TestK::Protocol(const int & tag){
+	string sql;
+	sql = "select [QuasiId], [Key] from Tags where Id=";
+	sql.append(itostr(tag));
+	adoConn.GetRecordSet(sql.c_str());
+	//if (adoConn.m_pRecordset->GetState() == adStateClosed || adoConn.m_pRecordset->GetRecordCount() == 0)
+	//{
+	//	cout << endl << "Tag[" << tag << "] isn't in DataBase." << endl;
+	//	return 0;
+	//}
 
+	// 生成查询信息
+	Request_Info req;
+	req.QuasiId = adoConn.m_pRecordset->GetCollect("QuasiId").uintVal;
+	req.key = adoConn.m_pRecordset->GetCollect("Key").uintVal;
+
+	// 计时器
+	MyTimer timer;	
+	// 初始化随机数生成器
+	minstd_rand0 minrand(timer.GetBegin());
+
+	timer.Start();
+
+	// 生成随机数
+	//random_device rd;	
+	unint R1 = minrand();
+	req.r1 = R1;
+	// 查询信息生成结束
+	// 关闭记录集
+	adoConn.CloseRecordset();
+
+	// 调用模拟标签的函数
+	//std::cout << "TagFun()..." << endl;
+	//Response_Info res = TagFun(req);
+
+	// 读取 Request_Info内的信息
+	unint quaId, tkey, r1;
+	quaId = req.QuasiId;
+	tkey = req.key;
+	r1 = req.r1;
+	hash<unint> int_hash;		// 计算Hash值
+
+	// 生成随机数，使用r1与key的并做为种子
+	minstd_rand0 minrand1(r1&tkey);
+	unint R2 = minrand1();
+
+	//std::cout << "r1: " << r1 << "\tr2: " << r2 << endl;
+	//std::cout << "Key: " << key << endl;
+
+	unint h = int_hash(r1&R2&tkey);	// 计算Hash值
+	//std::cout << "hash(r1,r2,key): " << h << endl;
+	
+	// 生成响应信息
+	Response_Info res;			
+	res.QuasiId = quaId;
+	res.r2= R2;
+	res.h = h;
+	// 标签的行为结束
+
+	// 调用阅读器的函数
+	//std::cout << endl << "ReaderFun()..." << endl;
+	//Result_Info result = ReaderFun(res, R1);
+
+	// 读取响应信息
+	unint qua,rr1, tr2, th;
+	qua = res.QuasiId;
+	rr1 = R1;
+	tr2 = res.r2;
+	th = res.h;
+	unint dbkey, h1;		// 数据库中存储的标签密钥, 新的Hash值
+
+	//cout << endl << "Start ReaderFun ... QuasiId = " << qua << endl;
+	// 访问数据库
+	//ADOConn adoConn;
+	//string sql;
+	sql = "select [QuasiId],[Key] from Tags where QuasiId = ";
+	sql += itostr(qua);
+	adoConn.GetRecordSet(sql.c_str());
+
+	//if (adoConn.m_pRecordset->GetRecordCount() == 0)
+	//	return false;
+	// 遍历记录集
+	while (adoConn.m_pRecordset->adoEOF == 0){
+		dbkey = adoConn.m_pRecordset->GetCollect("Key").uintVal;
+		h1 = int_hash(rr1&tr2&dbkey);
+		if (h1 == th)
+		{
+			//cout << endl << "Test end." << endl;
+			break;
+		}
+		adoConn.m_pRecordset->MoveNext();
+	}
+
+	//cout << endl << "ReaderFun end." << endl;
+	// 认证过程结束
+	// 计时器终止
+	timer.Stop();			
+
+	//cout << endl << "Result: " << endl;
+	//if (result == TRUE)
+	//	cout << "\tSuccess! Tag is authentication." << endl;
+	//else cout << "\tFailure" << endl;
+	//cout << endl << "Test end." << endl;
+
+	return  timer.GetTime();
 }

@@ -30,6 +30,8 @@ public:
 
 	typedef bool Result_Info;			// 认证结果
 
+	// 初始化数据库中的数据
+	bool InitData();
 	// 向数据库中插入数据
 	int DataInsert();
 
