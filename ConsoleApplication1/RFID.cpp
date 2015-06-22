@@ -9,27 +9,41 @@ ADOConn adoConn;				// 定义 全局数据库连接对象
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	cout << endl << "\t Hello! Task Starting... " << endl;
+	cout << endl << "\tHello! Task Starting... " << endl;
 	try{
 		// 测试数据库连接
-		adoConn.OnInitADOConn();
-		if (adoConn.m_pConnection != NULL && adoConn.m_pConnection->State == adStateOpen)
-			cout << endl << "DB connection success." << endl;
-		else{
-			cout << endl << "DB connection failure." << endl;
-			return -1;
-		}
-		string sql = "select count(*) as num from Tags ";
-		adoConn.GetRecordSet(sql.c_str());
-		cout << endl << "Data count(*) : " << adoConn.m_pRecordset->GetCollect("num").uintVal << endl;
+		//adoConn.OnInitADOConn();
+		//if (adoConn.m_pConnection != NULL && adoConn.m_pConnection->State == adStateOpen)
+		//	cout << endl << "Database connection success." << endl;
+		//else{
+		//	cout << endl << "Database connection failure." << endl;
+		//	return -1;
+		//}
 
 		// 随机选取10个标签作为实验对象
 		int tags[10];
 		int i = 0;
 		for (i = 0; i < 10; ++i){
 			tags[i] = _Random_device() % 1000 + 1;  // 取1...1000之间的数
+			cout << "tag[" << i << "]: " << tags[i] << "\t";
 		}
 
+		cout << endl << "argc: " << argc << endl;
+		i = 0;
+		while (argc--){			
+			wcout << "argv[" << i << "] = " << argv[i] << endl;
+			++i;
+		}
+
+		wcout << "test L string : " << L"long string with L" << endl;
+		_TCHAR *tchar;
+		tchar = _T("right");
+
+		if (!_tcscmp(tchar, argv[1]))
+			cout << "argv[1] is same to \"right\"." << endl;
+		else
+			cout << "No right" << endl;
+		
 	//	// 将实验对象逐个传入 ProtocolFun 函数进行实验
 	//	// 测试 k-匿名模型
 	//	TestK test_k(3);

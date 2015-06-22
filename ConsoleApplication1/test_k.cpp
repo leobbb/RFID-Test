@@ -72,6 +72,17 @@ int TestK::DataInsert(){
 
 bool TestK::TestData(){
 	string sql = "";
+	
+	//测试数据库中记录总数 
+	sql = "select count(*) as num from Tags ";
+	adoConn.GetRecordSet(sql.c_str());
+	if (adoConn.m_pRecordset->GetState() == adStateClosed || adoConn.m_pRecordset->GetRecordCount() == 0)
+		return FALSE;
+	int count = adoConn.m_pRecordset->GetCollect("num").intVal;
+	adoConn.CloseRecordset();
+	if (count < 1000)
+		return FALSE;
+
 	// 获取数据库中的第一条数据
 	sql = "select top 1 * from Tags";
 	adoConn.GetRecordSet(sql.c_str());
