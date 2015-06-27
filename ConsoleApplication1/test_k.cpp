@@ -18,7 +18,7 @@ int TestK::GetK(){
 	return k;
 }
 // 向数据库中插入数据
-int TestK::DataInsert(){
+int TestK::InsertData(){
 
 	hash<unint> int_hash;
 
@@ -29,16 +29,16 @@ int TestK::DataInsert(){
 		// 向数据库中添加数据
 		ostringstream sql;
 		unint count = 0;
-		size_t quaId;
-		cout << endl << "Start Insert Data...." << endl;
-		cout << "k = " << k << endl;
+		unint quaId;
+		cout << endl << "\tStart Insert Data...." << endl;
+		cout << "\tk = " << k << endl;
 		for (int i = 1000 / k; i > 0; --i){		// 以k进行分组
 			quaId = int_hash(_Random_device());	// 同一组使用相同的准标识符
 			for (int j = k; j > 0; --j){
 				sql.seekp(0);
 				sql.clear();
 				sql.str("");
-				sql << "insert into Tags values ( "
+				sql << "insert into Tags_K values ( "
 					<< quaId
 					<< ", "
 					<< int_hash(_Random_device())
@@ -52,7 +52,7 @@ int TestK::DataInsert(){
 			sql.seekp(0);
 			sql.clear();
 			sql.str("");
-			sql << "insert into Tags values ( "
+			sql << "insert into Tags_K values ( "
 				<< quaId
 				<< ", "
 				<< int_hash(_Random_device())
@@ -61,7 +61,7 @@ int TestK::DataInsert(){
 			if (adoConn.ExecuteSQL(sql.str().c_str()))
 				++count;
 		}
-		std::cout << endl << "The number of record is " << count << " ." << endl;
+		std::cout << endl << "\tThe number of record is " << count << " ." << endl;
 		return count;
 	}
 	catch (_com_error e){
@@ -74,17 +74,17 @@ bool TestK::TestData(){
 	string sql = "";
 	
 	//测试数据库中记录总数 
-	sql = "select count(*) as num from Tags ";
+	sql = "select count(*) as num from Tags_K ";
 	adoConn.GetRecordSet(sql.c_str());
 	if (adoConn.m_pRecordset->GetState() == adStateClosed || adoConn.m_pRecordset->GetRecordCount() == 0)
 		return FALSE;
-	int count = adoConn.m_pRecordset->GetCollect("num").intVal;
+	unint count = adoConn.m_pRecordset->GetCollect("num").intVal;
 	adoConn.CloseRecordset();
-	if (count < 1000)
+	if (count != 1000)
 		return FALSE;
 
 	// 获取数据库中的第一条数据
-	sql = "select top 1 * from Tags";
+	sql = "select top 1 * from Tags_K";
 	adoConn.GetRecordSet(sql.c_str());
 	if (adoConn.m_pRecordset->GetState() == adStateClosed || adoConn.m_pRecordset->GetRecordCount() == 0)
 		return FALSE;
@@ -92,7 +92,7 @@ bool TestK::TestData(){
 	adoConn.CloseRecordset();
 
 	// 获取具有相同QuasiId的记录
-	sql = "select * from Tags where [QuasiId]=";
+	sql = "select * from Tags_K where [QuasiId]=";
 	sql += itostr(qua);
 	adoConn.GetRecordSet(sql.c_str());
 	if (adoConn.m_pRecordset->GetState() == adStateClosed || adoConn.m_pRecordset->GetRecordCount() == 0)
@@ -118,14 +118,14 @@ bool TestK::InitData(){
 	// 初始化数据
 	cout << endl << "Delete All Data..." << endl;
 	string sql = "";
-	sql = "TRUNCATE TABLE [Tags]";
+	sql = "TRUNCATE TABLE [Tags_K]";
 	if (adoConn.ExecuteSQL(sql.c_str()))
 		cout << "\tOperating is done." << endl;
 	else
 		return FALSE;
 
 	cout << endl << "Insert New Data..." << endl;
-	if (DataInsert() == 1000)
+	if (InsertData() == 1000)
 		cout << "\tOperating is done." << endl;
 	else
 		return FALSE;
@@ -178,7 +178,7 @@ TestK::Result_Info TestK::ReaderFun(Response_Info res, unint r1){
 	hash<unint> int_hash;		// 计算Hash值
 
 	string sql;
-	sql = "select [QuasiId],[Key] from Tags where QuasiId = ";
+	sql = "select [QuasiId],[Key] from Tags_K where QuasiId = ";
 	sql += itostr(qua);
 	_RecordsetPtr pRecordset = adoConn.GetRecordSet(sql.c_str());
 	
@@ -191,22 +191,25 @@ TestK::Result_Info TestK::ReaderFun(Response_Info res, unint r1){
 		if (h1 == h)
 		{
 			//cout << endl << "Test end." << endl;
+			adoConn.CloseRecordset();
 			return TRUE;
 		}
 		pRecordset->MoveNext();
 	}
+	adoConn.CloseRecordset();
 	return FALSE;
 }
 
 // 模拟交互过程的函数
 unsigned _int64 TestK::ProtocolFun(const int & tag){
+	// 获取被选标签的信息
 	string sql;
-	sql = "select [QuasiId], [Key] from Tags where Id=";
+	sql = "select [QuasiId], [Key] from Tags_K where Num=";
 	sql.append(itostr(tag));
 	adoConn.GetRecordSet(sql.c_str());
 	if (adoConn.m_pRecordset->GetState() == adStateClosed || adoConn.m_pRecordset->GetRecordCount() == 0)
 	{
-		cout << endl << "Tag[" << tag << "] isn't in DataBase." << endl;
+		cout << endl << "Tag-" << tag << " isn't in DataBase." << endl;
 		return 0;
 	}
 
@@ -214,6 +217,7 @@ unsigned _int64 TestK::ProtocolFun(const int & tag){
 	Request_Info ri;
 	ri.QuasiId = adoConn.m_pRecordset->GetCollect("QuasiId").uintVal;
 	ri.key = adoConn.m_pRecordset->GetCollect("Key").uintVal;
+	adoConn.CloseRecordset();
 
 	// 计时器
 	MyTimer timer;

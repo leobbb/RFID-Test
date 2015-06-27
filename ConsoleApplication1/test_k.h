@@ -38,7 +38,7 @@ public:
 	// 测试数据是否正确
 	bool TestData();
 	// 向数据库中插入数据
-	int DataInsert();
+	int InsertData();
 
 	Response_Info TagFun(Request_Info rInfo);				// 模拟标签行为的函数
 	Result_Info ReaderFun(Response_Info res, unint r1);		// 模拟阅读器行为的函数

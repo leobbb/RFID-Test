@@ -22,5 +22,7 @@
 #include <random>				// 随机数生成
 #include <functional>			// 用到hash函数
 #include "rfid.h"
-#include "test_k.h" 
-#include "ADOConn.h"
+#include "test_k.h"				// k-匿名模型
+#include "ADOConn.h"			// 数据库连接
+#include "test_hl.h"			// Hash-Lock协议
+#include "test_last.h"			// LAST协议

@@ -36,6 +36,12 @@
     <ClInclude Include="ADOConn.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="test_hl.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="test_last.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -54,6 +60,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="ADOConn.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="test_hl.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
