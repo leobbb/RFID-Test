@@ -99,6 +99,7 @@
     </ClCompile>
     <ClCompile Include="test_hl.cpp" />
     <ClCompile Include="test_k.cpp" />
+    <ClCompile Include="test_last.cpp" />
     <ClCompile Include="Timer.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -33,7 +33,5 @@ public:
 	Result_Info ReaderFun(Response_Info res);		// 模拟阅读器行为的函数
 	unsigned _int64 ProtocolFun(const int& tag);			// 模拟交互过程的函数
 	unsigned _int64 Protocol(const int & tag);				// 模拟交互过程的函数 无函数调用
-
-	void Run(int tags[]);							// 开始实验
 };
 #endif

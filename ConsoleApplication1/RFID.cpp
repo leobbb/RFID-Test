@@ -184,5 +184,29 @@ int Run_HL(const int tags[], size_t size){
 int Run_L(const int tags[], size_t size){
 	// 测试 LAST 协议
 	cout << endl << "\tTest for LAST Protocol" << endl;
+
+	TestLAST test_last;
+	// 可能需要先测试数据是否正确、完整
+	if (test_last.InitData()){
+		cout << endl << "Data initial succeed." << endl;
+		cout << endl << "Test Starting..." << endl;
+	}
+	else{
+		cout << endl << "Data initial failure." << endl;
+		return -1;
+	}
+
+	cout << endl << "Result: \n" << endl;
+	size_t i = 0, j = 0;
+	LONGLONG lltime = 0;
+	while (i < size){
+		int tag = tags[i++];
+		for (j = 0, lltime = 0; j < 10; ++j){
+			lltime += test_last.ProtocolFun(tag);
+		}
+		cout << "Tag" << i << " (" << tag << "):\t"
+			<< "Time is " << lltime / 10 << " ns." << endl;
+	}
+	cout << endl << "End." << endl;
 	return 0;
 }

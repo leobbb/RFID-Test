@@ -38,7 +38,7 @@ bool TestHL::TestData(){
 	if (adoConn.m_pRecordset->GetState() == adStateClosed || adoConn.m_pRecordset->GetRecordCount() == 0)
 		return FALSE;
 	
-	int count = adoConn.m_pRecordset->GetCollect("num").intVal;
+	unint count = adoConn.m_pRecordset->GetCollect("num").uintVal;
 	adoConn.CloseRecordset();
 	if (count < 1000)
 		return FALSE;
@@ -58,7 +58,7 @@ int TestHL::InsertData(){
 		// 向数据库中添加数据
 		ostringstream sql;
 		unint count = 0;
-		cout << endl << "Start Insert Data...." << endl;
+		cout << endl << "\tStart Insert Data...." << endl;
 
 		for (int i = 1000; i > 0; --i){		
 			sql.seekp(0);
@@ -72,7 +72,7 @@ int TestHL::InsertData(){
 			if (adoConn.ExecuteSQL(sql.str().c_str()))
 				++count;			
 		}
-		std::cout << endl << "The number of record is " << count << " ." << endl;
+		std::cout << endl << "\tThe number of record is " << count << " ." << endl;
 		return count;
 	}
 	catch (_com_error e){

@@ -1,7 +1,6 @@
 // 测试k匿名隐私模型
 
 #include "stdafx.h"
-
 using namespace std;
 
 // 默认情况下 k = 5
@@ -233,7 +232,7 @@ unsigned _int64 TestK::ProtocolFun(const int & tag){
 	// 调用模拟标签的函数
 	Response_Info res = TagFun(ri);
 
-	// 调用阅读器的函数
+	// 调用模拟阅读器的函数
 	Result_Info result = ReaderFun(res, R1);
 
 	// 计时器终止
